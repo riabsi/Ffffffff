@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>بطاقة عضوية منصة رياض</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        body { background-color: #121212; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+        /* حاوية البطاقة */
+        #myCard {
+            width: 450px;
+            height: 260px;
+            /* استخدام الخلفية الرخامية التي اخترتها */
+            background-image: url('https://i.ibb.co/fVZjXVBf/background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            position: relative;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            border: 1.5px solid #d4af37;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* وضع الشعار (Logo) */
+        .logo-img {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 80px; /* يمكنك تكبير أو تصغير الشعار من هنا */
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .platform-name {
+            position: absolute;
+            top: 25px;
+            right: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d4af37;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .chip { 
+            width: 50px; height: 38px; 
+            background: linear-gradient(135deg, #f9f295 0%, #d4af37 50%, #b8860b 100%); 
+            border-radius: 6px; 
+            margin-top: 60px;
+            border: 1px solid #444;
+        }
+
+        .card-number { 
+            font-size: 24px; 
+            letter-spacing: 3.5px; 
+            margin-top: 30px; 
+            font-family: 'Courier New', monospace;
+            color: #f0f0f0;
+            text-shadow: 2px 2px 3px #000;
+        }
+
+        .student-info { 
+            margin-top: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+        }
+
+        .label { font-size: 9px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 17px; font-weight: bold; color: #fff; }
+
+        button {
+            margin-top: 40px;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #d4af37 0%, #aa891e 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #000;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover { transform: scale(1.05); opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div id="myCard">
+        <img src="https://github.com/riabsi/Ffffffff/raw/refs/heads/main/logo.png.png" class="logo-img" alt="Logo">
+        
+        <div class="platform-name">منصة رياض التعليمية</div>
+        
+        <div class="chip"></div>
+        
+        <div class="card-number">17C2 3C85 FC25 43A7</div>
+        
+        <div class="student-info">
+            <div>
+                <div class="label">اسم الطالب</div>
+                <div class="value">معاذ العبسي</div>
+            </div>
+            <div style="text-align: left;">
+                <div class="label">تاريخ الصلاحية</div>
+                <div class="value" style="font-size: 14px;">2026 / 12</div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="downloadCard()">تحميل بطاقتي الخاصة</button>
+
+    <script>
+        function downloadCard() {
+            const card = document.getElementById("myCard");
+            // useCORS ضروري لأن الصور من روابط خارجية (GitHub و ibb)
+            html2canvas(card, {
+                useCORS: true, 
+                scale: 3 
+            }).then(canvas => {
+                let link = document.createElement("a");
+                link.download = "Riad-Member-Card.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+    </script>
+
+</body>
+</html>
