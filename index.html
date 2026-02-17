@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ABSI AI - بطاقة العضوية الذكية</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root { --gold: #d4af37; --dark-bg: #121212; }
+        body { background-color: var(--dark-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+        .card-container { position: relative; width: 450px; height: 260px; }
+
+        /* التصميم الخلفي الفخم مع التوشيحات */
+        #myCard {
+            width: 100%; height: 100%;
+            background: #1a1a1a url('bg.jpg') no-repeat center; background-size: cover;
+            border-radius: 15px; border: 1.5px solid var(--gold); color: #fff;
+            padding: 20px; box-sizing: border-box; overflow: hidden; position: relative;
+        }
+
+        /* إضافة التوشيحات (الدخان/الخطوط) مثل الصورة */
+        #myCard::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1), transparent 70%),
+                        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(212,175,55,0.03) 35px, rgba(212,175,55,0.03) 36px);
+            pointer-events: none;
+        }
+
+        /* الغشاء (Overlay) */
+        #cardOverlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px);
+            border-radius: 15px; z-index: 20; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; border: 1.5px solid var(--gold);
+            transition: 0.6s ease-in-out;
+        }
+
+        #cardOverlay input {
+            margin: 8px; padding: 10px; width: 220px; border-radius: 8px; border: 1px solid var(--gold);
+            background: #1a1a1a; color: #fff; text-align: center; outline: none;
+        }
+
+        #cardOverlay button {
+            margin-top: 15px; padding: 10px 30px; background: linear-gradient(135deg, var(--gold), #aa891e);
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #000;
+        }
+
+        /* الشعار الجديد: ABSI AI ذهبي */
+        .absi-logo {
+            font-size: 28px; font-weight: 900; color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 2px 2px 2px #000;
+            letter-spacing: 2px; position: absolute; top: 20px; left: 20px;
+        }
+
+        .platform-name { position: absolute; top: 25px; right: 20px; font-size: 18px; font-weight: bold; color: #eee; }
+        .chip { width: 52px; height: 40px; background: linear-gradient(135deg, #f9f295, var(--gold)); border-radius: 6px; margin-top: 70px; border: 1px solid #444; }
+        .card-number { font-size: 24px; letter-spacing: 4px; margin-top: 25px; font-family: 'Courier New', monospace; text-shadow: 2px 2px 3px #000; }
+        
+        .student-info { margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .label { font-size: 9px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 18px; font-weight: bold; }
+
+        /* تأثير الإخفاء */
+        .unlocked { opacity: 0 !important; pointer-events: none; transform: scale(1.1); }
+        #downloadBtn { margin-top: 30px; padding: 12px 40px; background: var(--gold); border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div id="cardOverlay">
+            <div style="color:var(--gold); font-size: 18px; margin-bottom: 10px; font-weight: bold;">نظام التحقق الذكي</div>
+            <input type="text" id="nameIn" placeholder="اسم الطالب الكامل">
+            <input type="text" id="phoneIn" placeholder="رقم الهاتف">
+            <button onclick="unlock()">فتح البطاقة</button>
+            <p id="msg" style="color: #ff4d4d; font-size: 12px; margin-top: 10px;"></p>
+        </div>
+
+        <div id="myCard">
+            <div class="absi-logo">ABSI AI</div>
+            <div class="platform-name">PLATFORM</div>
+            
+            <div class="chip"></div>
+            <div class="card-number"> 90 EC BE 3D </div>
+            
+            <div class="student-info">
+                <div>
+                    <div class="label">STUDENT NAME</div>
+                    <div id="cardName" class="value">•••••••• ••••••••</div>
+                </div>
+                <div style="text-align: left;">
+                    <div class="label">VALID THRU</div>
+                    <div class="value">2026 / 12</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="downloadBtn" onclick="download()">تحميل البطاقة الملكية PNG</button>
+
+    <script>
+        // البيانات اللي رح يقارن فيها (لاحقاً بنجيبها من السيرفر)
+        const db = { name: "معاذ العبسي ", phone: "‏‪0781725264‬‏" };
+
+        function unlock() {
+            const n = document.getElementById("nameIn").value;
+            const p = document.getElementById("phoneIn").value;
+            
+            if(n === db.name && p === db.phone) {
+                document.getElementById("cardOverlay").classList.add("unlocked");
+                document.getElementById("cardName").innerText = n;
+                document.getElementById("downloadBtn").style.display = "block";
+            } else {
+                document.getElementById("msg").innerText = "خطأ في البيانات.. تأكد من الاسم والرقم";
+            }
+        }
+
+        function download() {
+            const card = document.getElementById("myCard");
+            html2canvas(card, { useCORS: true, scale: 3 }).then(canvas => {
+                const link = document.createElement("a");
+                link.download = "ABSI-AI-Card.png";
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
